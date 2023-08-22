@@ -27,7 +27,7 @@ objects. This is also possible to do using <code>make_persistent</code>:</p><div
 </span></span><span style=display:flex><span><span style=color:#66d9ef>auto</span> c <span style=color:#f92672>=</span> make_persistent<span style=color:#f92672>&lt;</span>entry[<span style=color:#ae81ff>3</span>][<span style=color:#ae81ff>2</span>]<span style=color:#f92672>&gt;</span>();  <span style=color:#75715e>/* allocate a 3 by 2 array entries */</span>
 </span></span></code></pre></div><p>Unfortunately the constructor arguments passing does not work with arrays of
 objects, so the object has to be default constructible.</p><p>When you are done with a persistent object and would like for it to be
-deallocated, you need to call the complementary <code>delete_persistent</code> function.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c++ data-lang=c++><span style=display:flex><span><span style=color:#66d9ef>delete</span><span style=color:#f92672>*</span>persistent<span style=color:#f92672>&lt;</span>entry<span style=color:#f92672>&gt;</span>(pentry); <span style=color:#75715e>/* delete persistent object */</span>
+deallocated, you need to call the complementary <code>delete_persistent</code> function.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c++ data-lang=c++><span style=display:flex><span>delete_persistent<span style=color:#f92672>&lt;</span>entry<span style=color:#f92672>&gt;</span>(pentry); <span style=color:#75715e>/* delete persistent object */</span>
 </span></span><span style=display:flex><span>delete_persistent<span style=color:#f92672>&lt;</span>entry[]<span style=color:#f92672>&gt;</span>(a, <span style=color:#ae81ff>3</span>); <span style=color:#75715e>/* delete persistent array &#39;a&#39; */</span>
 </span></span><span style=display:flex><span>delete_persistent<span style=color:#f92672>&lt;</span>entry[<span style=color:#ae81ff>3</span>]<span style=color:#f92672>&gt;</span>(b);   <span style=color:#75715e>/* delete persistent array &#39;b&#39; */</span>
 </span></span><span style=display:flex><span>delete_persistent<span style=color:#f92672>&lt;</span>entry[<span style=color:#ae81ff>3</span>][<span style=color:#ae81ff>2</span>]<span style=color:#f92672>&gt;</span>(c); <span style=color:#75715e>/* delete persistent array &#39;c&#39; */</span>
@@ -50,12 +50,12 @@ parameter passing and array allocations.</p><div class=highlight><pre tabindex=0
 </span></span><span style=display:flex><span>make_persistent_atomic<span style=color:#f92672>&lt;</span>entry[]<span style=color:#f92672>&gt;</span>(pop, pentry_array, <span style=color:#ae81ff>3</span>);
 </span></span></code></pre></div><p>Atomic deletions of persistent pointers is done through the
 <code>delete_persistent_atomic</code> function template, much like the transactional
-versions.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c++ data-lang=c++><span style=display:flex><span><span style=color:#66d9ef>delete</span><span style=color:#f92672>*</span>persistent_atomic<span style=color:#f92672>&lt;</span>entry<span style=color:#f92672>&gt;</span>(pentry); <span style=color:#75715e>/* delete persistent object */</span>
+versions.</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c++ data-lang=c++><span style=display:flex><span>delete_persistent_atomic<span style=color:#f92672>&lt;</span>entry<span style=color:#f92672>&gt;</span>(pentry); <span style=color:#75715e>/* delete persistent object */</span>
 </span></span><span style=display:flex><span>delete_persistent_atomic<span style=color:#f92672>&lt;</span>entry[]<span style=color:#f92672>&gt;</span>(pentry_array, <span style=color:#ae81ff>3</span>); <span style=color:#75715e>/* delete persistent array &#39;a&#39; */</span>
 </span></span></code></pre></div><p><em>An atomic allocation/deletion guarantees an object allocation and
 initialization/deletion that is atomic with respect to persistence</em>. This is
 important enough to have a separate section to explain.</p><h3 id=transactions-and-atomic-allocations>Transactions and atomic allocations</h3><p>This is the thing I absolutely have to convey clearly, <strong><em>atomic allocations and
-transactions do NOT mix</em></strong>. So something like the following is not a good idea:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c++ data-lang=c++><span style=display:flex><span><span style=color:#66d9ef>auto</span> pop <span style=color:#f92672>=</span> pool<span style=color:#f92672>*</span>base<span style=color:#f92672>::</span>create(...);
+transactions do NOT mix</em></strong>. So something like the following is not a good idea:</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c++ data-lang=c++><span style=display:flex><span><span style=color:#66d9ef>auto</span> pop <span style=color:#f92672>=</span> pool_base<span style=color:#f92672>::</span>create(...);
 </span></span><span style=display:flex><span>persistent_ptr<span style=color:#f92672>&lt;</span>entry<span style=color:#f92672>&gt;</span> pentry;
 </span></span><span style=display:flex><span>transaction<span style=color:#f92672>::</span>exec_tx(pop, [<span style=color:#f92672>&amp;</span>] {
 </span></span><span style=display:flex><span>  make_persistent_atomic<span style=color:#f92672>&lt;</span>entry<span style=color:#f92672>&gt;</span>(pop, pentry); <span style=color:#75715e>/* do NOT do this */</span>
@@ -68,12 +68,12 @@ It is stated in the C API, in debug builds you get a warning log, but I still
 feel the need to reinforce this, because there is no way to generate
 a compile time error.</p><p>To conclude:</p><ul><li>The atomic allocations API should <strong>NOT</strong> be used inside transactions</li><li>In case of atomic deallocations the memory gets freed, but the object&rsquo;s
 destructor is <strong>never called</strong>.</li><li>The transactional versions can only be used within transactions. If used
-outside of transaction scope, an exception is thrown.</li></ul><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c++ data-lang=c++><span style=display:flex><span><span style=color:#66d9ef>auto</span> pop <span style=color:#f92672>=</span> pool<span style=color:#f92672>*</span>base<span style=color:#f92672>::</span>create(...);
+outside of transaction scope, an exception is thrown.</li></ul><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c++ data-lang=c++><span style=display:flex><span><span style=color:#66d9ef>auto</span> pop <span style=color:#f92672>=</span> pool_base<span style=color:#f92672>::</span>create(...);
 </span></span><span style=display:flex><span>persistent_ptr<span style=color:#f92672>&lt;</span>entry<span style=color:#f92672>&gt;</span> pentry;
 </span></span><span style=display:flex><span>transaction<span style=color:#f92672>::</span>exec_tx(pop, [<span style=color:#f92672>&amp;</span>] {
-</span></span><span style=display:flex><span>make_persistent_atomic<span style=color:#f92672>&lt;</span>entry<span style=color:#f92672>&gt;</span>(pop, pentry); <span style=color:#75715e>/* legal but dangerous */</span>
-</span></span><span style=display:flex><span><span style=color:#66d9ef>auto</span> b <span style=color:#f92672>=</span> make_persistent<span style=color:#f92672>&lt;</span>entry<span style=color:#f92672>&gt;</span>(); <span style=color:#75715e>/* OK */</span>
-</span></span><span style=display:flex><span>delete_persistent<span style=color:#f92672>&lt;</span>entry<span style=color:#f92672>&gt;</span>(b); <span style=color:#75715e>/* call ~entry() and free memory */</span>
+</span></span><span style=display:flex><span>  make_persistent_atomic<span style=color:#f92672>&lt;</span>entry<span style=color:#f92672>&gt;</span>(pop, pentry); <span style=color:#75715e>/* legal but dangerous */</span>
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>auto</span> b <span style=color:#f92672>=</span> make_persistent<span style=color:#f92672>&lt;</span>entry<span style=color:#f92672>&gt;</span>(); <span style=color:#75715e>/* OK */</span>
+</span></span><span style=display:flex><span>  delete_persistent<span style=color:#f92672>&lt;</span>entry<span style=color:#f92672>&gt;</span>(b); <span style=color:#75715e>/* call ~entry() and free memory */</span>
 </span></span><span style=display:flex><span>});
 </span></span><span style=display:flex><span>
 </span></span><span style=display:flex><span>make_persistent_atomic<span style=color:#f92672>&lt;</span>entry<span style=color:#f92672>&gt;</span>(pop, pentry); <span style=color:#75715e>/* OK */</span>
@@ -91,22 +91,23 @@ bindings to libpmemobj - transactions.</p><h6 id=this-entry-was-edited-on-2017-1
 <a href=/tags/persistent-memory class=block role=button>persistent-memory</a>
 <a href=/tags/ndctl class=block role=button>ndctl</a>
 <a href=/tags/pmdk class=block role=button>pmdk</a>
+<a href=/tags/cxl class=block role=button>cxl</a>
 <a href=/tags/daxctl class=block role=button>daxctl</a>
+<a href=/tags/memkind class=block role=button>memkind</a>
 <a href=/tags/async class=block role=button>async</a>
 <a href=/tags/asynchronous class=block role=button>asynchronous</a>
 <a href=/tags/concurrency class=block role=button>concurrency</a>
 <a href=/tags/configure class=block role=button>configure</a>
-<a href=/tags/cxl class=block role=button>cxl</a>
 <a href=/tags/dax class=block role=button>dax</a>
 <a href=/tags/install class=block role=button>install</a>
 <a href=/tags/intro class=block role=button>intro</a>
-<a href=/tags/memkind class=block role=button>memkind</a>
 <a href=/tags/miniasync class=block role=button>miniasync</a>
 <a href=/tags/setup class=block role=button>setup</a>
 <a href=/tags/dml class=block role=button>dml</a>
 <a href=/tags/dsa class=block role=button>dsa</a>
 <a href=/tags/faq class=block role=button>faq</a>
 <a href=/tags/imdb class=block role=button>imdb</a>
+<a href=/tags/memory class=block role=button>memory</a>
 <a href=/tags/pmem-use-case class=block role=button>pmem-use-case</a>
 <a href=/tags/pmem2 class=block role=button>pmem2</a>
 <a href=/tags/sanitize class=block role=button>sanitize</a>
@@ -115,8 +116,7 @@ bindings to libpmemobj - transactions.</p><h6 id=this-entry-was-edited-on-2017-1
 <a href=/tags/tiering class=block role=button>tiering</a>
 <a href=/tags/2019 class=block role=button>2019</a>
 <a href=/tags/blogs class=block role=button>blogs</a>
-<a href=/tags/crash class=block role=button>crash</a>
-<a href=/tags/create class=block role=button>create</a></div></div></div></div></div></div></div></section><footer id=footer class="border-0 bg-white"><div id=copyrights><div class="container clearfix"><div class="row justify-content-between col-mb-30"><div class="col-12 col-lg-auto text-center text-lg-start"><div id=logo><a href=/ class=standard-logo data-dark-logo=images/logo-dark.png><img src=https://pmem.io/images/pmem_logo.png alt="PMem Logo"></a>
+<a href=/tags/crash class=block role=button>crash</a></div></div></div></div></div></div></div></section><footer id=footer class="border-0 bg-white"><div id=copyrights><div class="container clearfix"><div class="row justify-content-between col-mb-30"><div class="col-12 col-lg-auto text-center text-lg-start"><div id=logo><a href=/ class=standard-logo data-dark-logo=images/logo-dark.png><img src=https://pmem.io/images/pmem_logo.png alt="PMem Logo"></a>
 <a href=/ class=retina-logo data-dark-logo=images/logo-dark@2x.png><img src=https://pmem.io/images/pmem_logo.png alt="PMem Logo"></a></div></div><div class="col-12 col-lg-auto text-center text-lg-end"><div class="copyrights-menu copyright-links clearfix text-uppercase"><a href=https://pmem.io/about>about</a>/
 <a href=https://pmem.io/blog>blog</a>/
 <a href=https://pmem.io/community>community</a>/

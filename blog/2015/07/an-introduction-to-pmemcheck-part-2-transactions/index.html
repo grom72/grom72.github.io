@@ -200,7 +200,7 @@ Pmemcheck</li></ul></div><div class="entry-content mt-0"><p>In my previous blog 
 </span></span><span style=display:flex><span><span style=color:#66d9ef>int</span> <span style=color:#a6e22e>main</span>(<span style=color:#66d9ef>int</span> argc, <span style=color:#66d9ef>char</span><span style=color:#f92672>**</span> argv)
 </span></span><span style=display:flex><span>{
 </span></span><span style=display:flex><span>    <span style=color:#75715e>/* create a pool within an existing file */</span>
-</span></span><span style=display:flex><span>    PMEMobjpool <span style=color:#f92672>*</span>pop <span style=color:#f92672>=</span> pmemobj<span style=color:#f92672>*</span>create(<span style=color:#e6db74>&#34;testfile1&#34;</span>,
+</span></span><span style=display:flex><span>    PMEMobjpool <span style=color:#f92672>*</span>pop <span style=color:#f92672>=</span> pmemobj_create(<span style=color:#e6db74>&#34;testfile1&#34;</span>,
 </span></span><span style=display:flex><span>        POBJ_LAYOUT_NAME(example),
 </span></span><span style=display:flex><span>        <span style=color:#ae81ff>1024</span> <span style=color:#f92672>*</span> <span style=color:#ae81ff>1024</span> <span style=color:#f92672>*</span> <span style=color:#ae81ff>1024</span>, S_IWUSR <span style=color:#f92672>|</span> S_IRUSR);
 </span></span><span style=display:flex><span>
@@ -263,9 +263,9 @@ Pmemcheck</li></ul></div><div class="entry-content mt-0"><p>In my previous blog 
 </span></code></pre></td><td style=vertical-align:top;padding:0;margin:0;border:0;width:100%><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-C data-lang=C><span style=display:flex><span><span style=color:#66d9ef>int</span> <span style=color:#a6e22e>main</span>(<span style=color:#66d9ef>int</span> argc, <span style=color:#66d9ef>char</span><span style=color:#f92672>**</span> argv)
 </span></span><span style=display:flex><span>{
 </span></span><span style=display:flex><span>    <span style=color:#75715e>/* create a pool within an existing file */</span>
-</span></span><span style=display:flex><span>    PMEMobjpool <span style=color:#f92672>*</span>pop <span style=color:#f92672>=</span> pmemobj<span style=color:#f92672>*</span>create(<span style=color:#e6db74>&#34;testfile1&#34;</span>,
+</span></span><span style=display:flex><span>    PMEMobjpool <span style=color:#f92672>*</span>pop <span style=color:#f92672>=</span> pmemobj_create(<span style=color:#e6db74>&#34;testfile1&#34;</span>,
 </span></span><span style=display:flex><span>        POBJ_LAYOUT_NAME(example),
-</span></span><span style=display:flex><span>        <span style=color:#ae81ff>1024</span> <span style=color:#f92672>*</span> <span style=color:#ae81ff>1024</span> <span style=color:#960050;background-color:#1e0010>\</span>_ <span style=color:#ae81ff>1024</span>, S_IWUSR <span style=color:#f92672>|</span> S_IRUSR);
+</span></span><span style=display:flex><span>        <span style=color:#ae81ff>1024</span> <span style=color:#f92672>*</span> <span style=color:#ae81ff>1024</span> <span style=color:#f92672>*</span> <span style=color:#ae81ff>1024</span>, S_IWUSR <span style=color:#f92672>|</span> S_IRUSR);
 </span></span><span style=display:flex><span>
 </span></span><span style=display:flex><span>    TX_BEGIN(pop) {
 </span></span><span style=display:flex><span>    	TOID(<span style=color:#66d9ef>struct</span> my_root) root <span style=color:#f92672>=</span> POBJ_ROOT(pop, <span style=color:#66d9ef>struct</span> my_root);
@@ -288,22 +288,23 @@ Pmemcheck</li></ul></div><div class="entry-content mt-0"><p>In my previous blog 
 <a href=/tags/persistent-memory class=block role=button>persistent-memory</a>
 <a href=/tags/ndctl class=block role=button>ndctl</a>
 <a href=/tags/pmdk class=block role=button>pmdk</a>
+<a href=/tags/cxl class=block role=button>cxl</a>
 <a href=/tags/daxctl class=block role=button>daxctl</a>
+<a href=/tags/memkind class=block role=button>memkind</a>
 <a href=/tags/async class=block role=button>async</a>
 <a href=/tags/asynchronous class=block role=button>asynchronous</a>
 <a href=/tags/concurrency class=block role=button>concurrency</a>
 <a href=/tags/configure class=block role=button>configure</a>
-<a href=/tags/cxl class=block role=button>cxl</a>
 <a href=/tags/dax class=block role=button>dax</a>
 <a href=/tags/install class=block role=button>install</a>
 <a href=/tags/intro class=block role=button>intro</a>
-<a href=/tags/memkind class=block role=button>memkind</a>
 <a href=/tags/miniasync class=block role=button>miniasync</a>
 <a href=/tags/setup class=block role=button>setup</a>
 <a href=/tags/dml class=block role=button>dml</a>
 <a href=/tags/dsa class=block role=button>dsa</a>
 <a href=/tags/faq class=block role=button>faq</a>
 <a href=/tags/imdb class=block role=button>imdb</a>
+<a href=/tags/memory class=block role=button>memory</a>
 <a href=/tags/pmem-use-case class=block role=button>pmem-use-case</a>
 <a href=/tags/pmem2 class=block role=button>pmem2</a>
 <a href=/tags/sanitize class=block role=button>sanitize</a>
@@ -312,8 +313,7 @@ Pmemcheck</li></ul></div><div class="entry-content mt-0"><p>In my previous blog 
 <a href=/tags/tiering class=block role=button>tiering</a>
 <a href=/tags/2019 class=block role=button>2019</a>
 <a href=/tags/blogs class=block role=button>blogs</a>
-<a href=/tags/crash class=block role=button>crash</a>
-<a href=/tags/create class=block role=button>create</a></div></div></div></div></div></div></div></section><footer id=footer class="border-0 bg-white"><div id=copyrights><div class="container clearfix"><div class="row justify-content-between col-mb-30"><div class="col-12 col-lg-auto text-center text-lg-start"><div id=logo><a href=/ class=standard-logo data-dark-logo=images/logo-dark.png><img src=https://pmem.io/images/pmem_logo.png alt="PMem Logo"></a>
+<a href=/tags/crash class=block role=button>crash</a></div></div></div></div></div></div></div></section><footer id=footer class="border-0 bg-white"><div id=copyrights><div class="container clearfix"><div class="row justify-content-between col-mb-30"><div class="col-12 col-lg-auto text-center text-lg-start"><div id=logo><a href=/ class=standard-logo data-dark-logo=images/logo-dark.png><img src=https://pmem.io/images/pmem_logo.png alt="PMem Logo"></a>
 <a href=/ class=retina-logo data-dark-logo=images/logo-dark@2x.png><img src=https://pmem.io/images/pmem_logo.png alt="PMem Logo"></a></div></div><div class="col-12 col-lg-auto text-center text-lg-end"><div class="copyrights-menu copyright-links clearfix text-uppercase"><a href=https://pmem.io/about>about</a>/
 <a href=https://pmem.io/blog>blog</a>/
 <a href=https://pmem.io/community>community</a>/
