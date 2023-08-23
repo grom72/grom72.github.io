@@ -12,13 +12,13 @@ banner:
   bg_image: ''
   title: ''
   content_banner:
-    bold_text: 'Winding down of PMDK development!'
-    text: 'The PMDK repository on the GitHub has been the ultimate source of information since the release 2.0.0. It is not guaranteed that the content of this site reflects the latest state of PMDK-related knowledge.'
+    bold_text: '<p>The <a href=\"https://github.com/pmem/pmdk/\">PMDK repository on the GitHub</a> has been the ultimate source of information since the release 2.0.0!</p>'
+    text: 'This website is valid up to PMDK release 1.13.0. It is not guaranteed that the content of this site reflects the latest state of PMDK-related knowledge.'
 
 ################################# Libraries Section #################################
 libraries_section:
   enable: true
-  title: "The following libraries are part of the PMDK.</p>"
+  title: "<p>The following libraries are part of the PMDK starting release 2.0.0.</p>"
   libraries:
     library_item1:
       title: 'libpmemobj'
@@ -32,7 +32,7 @@ libraries_section:
       title: 'libpmem2'
       content: "<p>The <strong>libpmem2</strong> library provides low level persistent memory support. The library is a new version of <strong>libpmem</strong>. <strong>libpmem2</strong> provides a more universal and platform-agnostic interface. Developers wishing to roll their own persistent memory algorithms will find this library useful, but most developers will likely use <strong>libpmemobj</strong> above that provides memory allocation and transactions support.</p>
                 <p>See the <a href=\"./libpmem2\">libpmem2 page</a> for documentation and examples.</p>
-                <blockquote><p><strong>Note:</strong> Support for async functions is deprecated since PMDK 1.13.0 release and was removed in the PMDK 2.0.0 release along with the miniasync dependency.</p></blockquote>"
+                <blockquote><p><strong>Note:</strong>Support for experimental <strong>async</strong> functions is available only in the release 1.13.0 and before.</p></blockquote>"
     library_item4:
       title: 'libpmempool'
       content: "<p>The <strong>libpmempool</strong> library provides support for off-line pool management and diagnostics.</p>
