@@ -17,7 +17,7 @@ banner:
   bg_image: ''
   title: ''
   content_banner:
-    bold_text: 'Winding down of PMDK development!'
+    bold_text: 'DAOS take over PMDK!'
     text: 'Libraries and all related resources will continue to be available, but development and maintenance will be limited.'
   download_link:
     label: 'Read our blog post for more details and Q&A!'
